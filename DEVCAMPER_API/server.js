@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
-const morganMiddleware = require('morgan') 
+const morganMiddleware = require('morgan')
+const connectDB = require('./config/db')
 
 // Custom middleware
 const logger = require('./middleware/logger')
@@ -10,10 +11,19 @@ const routes = require('./routes/bootcamps')
 // load env vars
 dotenv.config()
 
+//console.log(process.env.MONGO_URI)
+
+
+// Connect to DB
+connectDB()
+
 const app = express()
 
+// Body parser ( to get the request from user in json)
+app.use(express.json())
+
 // Morgan logger
-if(process.env.NODE_ENV === 'development'){
+if (process.env.NODE_ENV === 'development') {
     app.use(morganMiddleware('dev'))
 }
 
@@ -25,6 +35,15 @@ app.use('/api/v1/bootcamps', routes)
 
 const PORT = process.env.PORT || 3000
 
-//console.log(process.env)
 
-app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`))
+const server = app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`))
+
+// Handle unhandled promise rejection
+
+process.on('unhandledRejection', (err, promise) => {
+    console.log(`Error: ${err.message}`)
+
+    // close server & exit process
+    server.close(() => process.exit(1))
+})
+

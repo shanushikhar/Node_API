@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const morganMiddleware = require("morgan");
 const connectDB = require("./config/db");
+const ErrorHandler = require("./middleware/error");
 
 // Custom middleware
 const logger = require("./middleware/logger");
@@ -32,6 +33,9 @@ app.use(logger);
 
 // Mount routes
 app.use("/api/v1/bootcamps", routes);
+
+// Error Handler
+app.use(ErrorHandler);
 
 const PORT = process.env.PORT || 3000;
 

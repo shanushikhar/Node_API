@@ -1,9 +1,10 @@
 const logger = (req, res, next) => {
-    req.hello = 'Hello World'
-    console.log('Middleware called')
-    console.log(`${req.method} ${req.protocol}://${req.get('host')}${req.originalUrl}`)
-    next()
-}
+  req.hello = "Hello World";
+  // console.log('Middleware called')
+  console.log(
+    `${req.method} ${req.protocol}://${req.get("host")}${req.originalUrl}`
+  );
+  next();
+};
 
-module.exports = logger
-
+module.exports = logger;

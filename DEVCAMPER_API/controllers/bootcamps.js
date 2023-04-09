@@ -8,21 +8,50 @@ const ErrorResponse = require("../utils/ErrorResponse");
 
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
   // console.log(req.query);
+  let query;
+  // copy req.query
+  const reqQuery = { ...req.query };
+
+  // Fields to exclude
+  const removeFields = ["select", "sort"];
+
+  // loop over removeFields and delete them
+  removeFields.forEach((params) => delete reqQuery[params]);
+
+  // Create query string
+  let queryParams = JSON.stringify(req.query);
 
   // handle more query
-  let queryParams = JSON.stringify(req.query);
   queryParams = queryParams.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
     (match) => `$${match}`
   );
-  console.log(queryParams, "-----", JSON.parse(queryParams));
 
   // {{URL}}/api/v1/bootcamps?averageCost[gte]=10000
   // {{URL}}/api/v1/bootcamps?careers[in]=Data Science
-  const bootcamps = await Bootcamp.find(JSON.parse(queryParams));
+  query = Bootcamp.find(JSON.parse(queryParams));
 
   // {{URL}}/api/v1/bootcamps?location.state=MA&housing=true
   //const bootcamps = await Bootcamp.find(req.query);
+
+  // Select fields
+  if (req.query.select) {
+    const fields = req.query.select.split(",").join(" ");
+    // query = query.select(fields); // not working
+    query = Bootcamp.find({}, fields);
+  }
+
+  // Sort
+  // /api/v1/bootcamps?select=name,description,email&sort=-name => decending order
+  if (req.query.sort) {
+    const fields = req.query.sort.split(",").join(" ");
+    query = query.sort(fields);
+  } else {
+    query = query.sort("-createdAt"); // descending
+  }
+
+  // Executing fields
+  const bootcamps = await query;
 
   res.status(200).json({
     success: true,

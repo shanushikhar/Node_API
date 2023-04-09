@@ -7,7 +7,22 @@ const ErrorResponse = require("../utils/ErrorResponse");
 // @access   Public
 
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  const bootcamps = await Bootcamp.find();
+  // console.log(req.query);
+
+  // handle more query
+  let queryParams = JSON.stringify(req.query);
+  queryParams = queryParams.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+  console.log(queryParams, "-----", JSON.parse(queryParams));
+
+  // {{URL}}/api/v1/bootcamps?averageCost[gte]=10000
+  // {{URL}}/api/v1/bootcamps?careers[in]=Data Science
+  const bootcamps = await Bootcamp.find(JSON.parse(queryParams));
+
+  // {{URL}}/api/v1/bootcamps?location.state=MA&housing=true
+  //const bootcamps = await Bootcamp.find(req.query);
 
   res.status(200).json({
     success: true,
@@ -81,4 +96,26 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
     );
 
   res.status(400).json({ success: true, data: bootcamp });
+});
+
+// not tested
+exports.getBootcampInRadius = asyncHandler(async (req, res, next) => {
+  const { zipcode, distance } = req.params;
+
+  const radius = distance / 3963;
+  const latlng = [-71.324239, 42.650484];
+  // need some proper lat & lng
+  const lng = latlng[0];
+  const lat = latlng[1];
+
+  const bootcamp = await Bootcamp.find({
+    location: {
+      $geoWithin: { $centerSphere: [[lng, lat], radius] },
+    },
+  });
+  res.status(200).json({
+    success: true,
+    count: bootcamp.length,
+    data: bootcamp,
+  });
 });

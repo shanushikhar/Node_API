@@ -13,7 +13,6 @@
     "jobAssistance": true,
     "jobGuarantee": false,
     "acceptGi": true,
-    "averageCost": 10000,
     "location": {
       "type": "Point",
       "coordinates": [-71.324239, 42.650484],
@@ -33,7 +32,6 @@
     "careers": ["Web Development", "UI/UX", "Mobile Development"],
     "housing": false,
     "jobAssistance": true,
-    "averageCost": 5000,
     "jobGuarantee": false,
     "acceptGi": true,
     "location": {
@@ -57,7 +55,6 @@
     "jobAssistance": false,
     "jobGuarantee": false,
     "acceptGi": false,
-    "averageCost": 8000,
     "location": {
       "type": "Point",
       "coordinates": [-81.324239, 52.650484],
@@ -84,7 +81,6 @@
     "jobAssistance": true,
     "jobGuarantee": true,
     "acceptGi": true,
-    "averageCost": 15000,
     "location": {
       "type": "Point",
       "coordinates": [-63.324239, 43.650484],

@@ -28,7 +28,7 @@ const coursesFiles = JSON.parse(
 const insertData = async (req, res) => {
   try {
     await Bootcamp.create(bootcampFiles);
-    await Course.create(coursesFiles);
+    //await Course.create(coursesFiles);
     console.log("Data has been inserted".green.bold);
     process.exit();
   } catch (error) {

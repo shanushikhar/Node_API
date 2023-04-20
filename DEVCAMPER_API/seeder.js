@@ -7,6 +7,7 @@ dotenv.config({ path: "./config/config.env" });
 
 // load modals
 const Bootcamp = require("./Modals/Bootcamp");
+const Course = require("./Modals/Course");
 
 // connect to DB
 mongoose.connect(process.env.MONGO_URL, {
@@ -16,14 +17,18 @@ mongoose.connect(process.env.MONGO_URL, {
   useUnifiedTopology: true,
 });
 
-const files = JSON.parse(
+const bootcampFiles = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/bootcamps.json`, "utf-8")
+);
+const coursesFiles = JSON.parse(
+  fs.readFileSync(`${__dirname}/_data/courses.json`, "utf-8")
 );
 
 // Insert data
 const insertData = async (req, res) => {
   try {
-    await Bootcamp.create(files);
+    await Bootcamp.create(bootcampFiles);
+    await Course.create(coursesFiles);
     console.log("Data has been inserted".green.bold);
     process.exit();
   } catch (error) {
@@ -35,6 +40,7 @@ const insertData = async (req, res) => {
 const deleteData = async (req, res) => {
   try {
     await Bootcamp.deleteMany();
+    await Course.deleteMany();
     console.log("Data has been deleted...".bgGreen.italic);
     process.exit();
   } catch (error) {

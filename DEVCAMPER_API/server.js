@@ -8,7 +8,8 @@ const ErrorHandler = require("./middleware/error");
 // Custom middleware
 const logger = require("./middleware/logger");
 // Route files
-const routes = require("./routes/bootcamps");
+const bootcamp = require("./routes/bootcamps");
+const courses = require("./routes/courses");
 
 // load env vars
 dotenv.config({ path: "./config/config.env" });
@@ -32,7 +33,8 @@ if (process.env.NODE_ENV === "development") {
 app.use(logger);
 
 // Mount routes
-app.use("/api/v1/bootcamps", routes);
+app.use("/api/v1/bootcamps", bootcamp);
+app.use("/api/v1/courses", courses);
 
 // Error Handler
 app.use(ErrorHandler);
